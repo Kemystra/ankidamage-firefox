@@ -1,0 +1,22 @@
+{
+  "name": "ankidamage-firefox",
+  "version": "0.1.0",
+  "description": "A Firefox extension that scrapes KanjiDamage's pages, and generate new cards using the info.",
+  "main": "manifest.json",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kemystra/ankidamage-firefox.git"
+  },
+  "author": "K3mystra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kemystra/ankidamage-firefox/issues"
+  },
+  "homepage": "https://github.com/Kemystra/ankidamage-firefox#readme",
+  "devDependencies": {
+    "web-ext": "^7.8.0"
+  }
+}
