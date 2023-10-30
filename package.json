@@ -4,7 +4,9 @@
   "description": "A Firefox extension that scrapes KanjiDamage's pages, and generate new cards using the info.",
   "main": "manifest.json",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"build": "web-ext build",
+	"start:firefox": "web-ext run --source-dir ./extension-dist/"
   },
   "repository": {
     "type": "git",
