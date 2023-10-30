@@ -1,0 +1,36 @@
+body {
+    width: 100px;
+    height: 100px;
+
+    background-color: rgb(34, 34, 36);
+}
+
+svg {
+    width: 80%;
+    margin: 0;
+}
+
+#activate {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-45%, -55%);
+
+    aspect-ratio: 1;
+    width: 60%;
+
+    background: linear-gradient(315deg, rgba(116,255,243,1) 0%, rgba(247,104,255,1) 100%);
+    border: none;
+    border-radius: 10px;
+
+    box-shadow: -5px 5px 4px 2px;
+}
+
+#activate:active {
+    box-shadow: none;
+    transform: translate(-50%, -50%);
+}
+
+#error {
+    color: white;
+}
