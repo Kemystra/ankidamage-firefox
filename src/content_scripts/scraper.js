@@ -1,92 +1,78 @@
-(() => { 
-    if (window.hasRun) {
-        return;
-    }
+// Best string manipulation project 2022
+function sendKanjiInfo() {
+    let message = {};
 
-    window.hasRun = true;
+    message.kanji = $(".kanji_character").eq(0).text();
+    message.keyword = $(".translation").eq(0).text();
+    message.radicals = $(".col-md-8").eq(1).text()
+        .replace(/\s/g, " ")
+        .replace(message.kanji, "")
+        .replace(message.keyword, "")
+        .replace(" +", " + ")
+        .trim();
 
-    // Best string manipulation project 2022
-    function sendKanjiInfo() {
-        let message = {};
+    let kunyomiTable, onyomiTable;
 
-        message.kanji = $(".kanji_character").eq(0).text();
-        message.keyword = $(".translation").eq(0).text();
-        message.radicals = $(".col-md-8").eq(1).text()
-                            .replace(/\s/g, " ")
-                            .replace(message.kanji, "")
-                            .replace(message.keyword, "")
-                            .replace(" +", " + ")
-                            .trim();
+    // Search through the main table, and look for the necessary sections
+    let defTables = $(".col-md-12").eq(0).children();
+    for(let i = 0; i < defTables.length; i++) {
+        if(defTables.eq(i).prop("nodeName") === "H2") {
 
-        let kunyomiTable, onyomiTable;
-
-        // Search through the main table, and look for the necessary sections
-        let defTables = $(".col-md-12").eq(0).children();
-        for(let i = 0; i < defTables.length; i++) {
-            if(defTables.eq(i).prop("nodeName") === "H2") {
-
-                switch(defTables.eq(i).text())
+            switch(defTables.eq(i).text())
                 {
-                    case "Onyomi":
-                        onyomiTable = defTables.eq(i + 1).find("td");
-                        break;
+                case "Onyomi":
+                    onyomiTable = defTables.eq(i + 1).find("td");
+                    break;
 
-                    case "Kunyomi":
-                        kunyomiTable = defTables.eq(i + 1).find("td");
-                        break;
+                case "Kunyomi":
+                    kunyomiTable = defTables.eq(i + 1).find("td");
+                    break;
 
-                    case "Mnemonic":
-                        message.mnemonics = defTables.eq(i + 1).text().trim();
-                        break;
+                case "Mnemonic":
+                    message.mnemonics = defTables.eq(i + 1).text().trim();
+                    break;
 
-                    default:
-                        continue;
-                }   
+                default:
+                    continue;
             }
         }
-
-        if(onyomiTable) {
-            message.onyomi = onyomiTable.eq(0).text().trim();
-            message.onyomiSentence = onyomiTable.eq(1).text().trim();
-        }
-
-        message.kunyomiData = {};
-        kunyomis = [];
-        kunyomiUsages = [];
-
-        if(kunyomiTable) {
-            // RegEx FTW!!1!
-            kunyomiTable.each((index, element) => {
-                let kunyomiElem = $(element).text();
-                if (index % 2) {
-                    
-                    kunyomiUsages.push(kunyomiElem
-                        .replace(/[★☆]/g, "")
-                        .replace(/[\n\r]+/g, "")
-                        .trim()
-                    );
-                }
-                else {
-                    
-                    kunyomis.push(kunyomiElem
-                        .replace(/[\n\r]+/g, "")
-                        .replace(")", ") ")
-                        .trim()
-                    );
-                }
-            });
-        }
-
-        kunyomis.forEach((val, i) => {
-            message.kunyomiData[val] = kunyomiUsages[i];
-        });
-        
-        browser.runtime.sendMessage(message);
     }
 
-    browser.runtime.onMessage.addListener(message => {
-        if (message.command === "scrapeSite") {
-            sendKanjiInfo();
-        }
-    })
-})();
+    if(onyomiTable) {
+        message.onyomi = onyomiTable.eq(0).text().trim();
+        message.onyomiSentence = onyomiTable.eq(1).text().trim();
+    }
+
+    message.kunyomiData = {};
+    kunyomis = [];
+    kunyomiUsages = [];
+
+    if(kunyomiTable) {
+        // RegEx FTW!!1!
+        kunyomiTable.each((index, element) => {
+            let kunyomiElem = $(element).text();
+            if (index % 2) {
+
+                kunyomiUsages.push(kunyomiElem
+                    .replace(/[★☆]/g, "")
+                    .replace(/[\n\r]+/g, "")
+                    .trim()
+                );
+            }
+            else {
+
+                kunyomis.push(kunyomiElem
+                    .replace(/[\n\r]+/g, "")
+                    .replace(")", ") ")
+                    .trim()
+                );
+            }
+        });
+    }
+
+    kunyomis.forEach((val, i) => {
+        message.kunyomiData[val] = kunyomiUsages[i];
+    });
+
+    browser.runtime.sendMessage(message);
+}
