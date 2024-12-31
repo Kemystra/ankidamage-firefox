@@ -27,7 +27,7 @@
       {
         "matches": ["https://www.kanjidamage.com/kanji/*"],
         "js": [
-          "./content_scripts/scraper.js",
+          "./content_scripts/main.js",
           "./content_scripts/jquery-3.min.js"
         ]
       }
