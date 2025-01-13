@@ -32,25 +32,25 @@ function sendKanjiInfo() {
     // Search through the main table, and look for the necessary sections
     let defTables = $(".col-md-12").eq(0).children();
     for(let i = 0; i < defTables.length; i++) {
-        if(defTables.eq(i).prop("nodeName") === "H2") {
+        if(defTables.eq(i).prop("nodeName") !== "H2") {
+            continue;
+        }
 
-            switch(defTables.eq(i).text())
-                {
-                case "Onyomi":
-                    onyomiTable = defTables.eq(i + 1).find("td");
-                    break;
+        switch(defTables.eq(i).text()) {
+            case "Onyomi":
+                onyomiTable = defTables.eq(i + 1).find("td");
+                break;
 
-                case "Kunyomi":
-                    kunyomiTable = defTables.eq(i + 1).find("td");
-                    break;
+            case "Kunyomi":
+                kunyomiTable = defTables.eq(i + 1).find("td");
+                break;
 
-                case "Mnemonic":
-                    message.mnemonics = defTables.eq(i + 1).text().trim();
-                    break;
+            case "Mnemonic":
+                message.mnemonics = defTables.eq(i + 1).text().trim();
+                break;
 
-                default:
-                    continue;
-            }
+            default:
+                continue;
         }
     }
 
@@ -68,7 +68,6 @@ function sendKanjiInfo() {
         kunyomiTable.each((index, element) => {
             let kunyomiElem = $(element).text();
             if (index % 2) {
-
                 kunyomiUsages.push(kunyomiElem
                     .replace(/[★☆]/g, "")
                     .replace(/[\n\r]+/g, "")
@@ -76,7 +75,6 @@ function sendKanjiInfo() {
                 );
             }
             else {
-
                 kunyomis.push(kunyomiElem
                     .replace(/[\n\r]+/g, "")
                     .replace(")", ") ")
