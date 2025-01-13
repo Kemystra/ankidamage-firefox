@@ -5,8 +5,8 @@
   "main": "manifest.json",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"build": "web-ext build",
-	"start:firefox": "web-ext run --source-dir ./src/"
+    "build": "web-ext build",
+    "start:firefox": "web-ext run --source-dir ./src/"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/Kemystra/ankidamage-firefox#readme",
   "devDependencies": {
-    "web-ext": "^7.8.0"
+    "web-ext": "^7.12.0"
   }
 }
