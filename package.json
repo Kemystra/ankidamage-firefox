@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/Kemystra/ankidamage-firefox#readme",
   "devDependencies": {
-    "web-ext": "^7.12.0"
+    "web-ext": "^8.3.0"
   }
 }
