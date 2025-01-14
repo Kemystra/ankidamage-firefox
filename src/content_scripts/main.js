@@ -1,4 +1,4 @@
-(async () => { 
+(() => {
     // Each time the user opens a popup, this script will be injected into the page
     // If it's opened multiple times, then there will be multiple instances of this script
     // The rest of them will be stopped since window.hasRun has been set to true by the first instance
@@ -9,13 +9,14 @@
     window.hasRun = true;
     browser.runtime.onMessage.addListener(message => {
         if (message.command === "scrapeSite") {
-            sendKanjiInfo();
+            let message = scrapeKanjiInfo();
+            browser.runtime.sendMessage(message);
         }
     })
 })();
 
 // Best string manipulation project 2022
-function sendKanjiInfo() {
+function scrapeKanjiInfo() {
     let message = {};
 
     message.kanji = $(".kanji_character").eq(0).text();
@@ -65,6 +66,10 @@ function sendKanjiInfo() {
 
     if(kunyomiTable) {
         // RegEx FTW!!1!
+        // Technically, you MAY be able to use a normal for loop
+        // and avoid the use of if-else inside
+        // but damn, the code works for 3 years
+        // ain't touching that
         kunyomiTable.each((index, element) => {
             let kunyomiElem = $(element).text();
             if (index % 2) {
@@ -88,5 +93,5 @@ function sendKanjiInfo() {
         message.kunyomiData[val] = kunyomiUsages[i];
     });
 
-    browser.runtime.sendMessage(message);
+    return message;
 }
