@@ -15,11 +15,27 @@
     })
 })();
 
+
+
 // Best string manipulation project 2022
 function scrapeKanjiInfo() {
     let message = {};
 
-    message.kanji = $(".kanji_character").eq(0).text();
+    // There's always only one content in the span: either text or <img>
+    let kanji_span_content = $(".kanji_character").eq(0).contents().eq(0);
+
+    // From https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+    const ELEMENT_NODE = 1;
+    const TEXT_NODE = 3;
+    if (kanji_span_content.prop("nodeType") === ELEMENT_NODE) {
+        message.kanji = { elem_type: "IMG", value: kanji_span_content.attr("src") };
+    }
+    else {
+        message.kanji = { elem_type: "TEXT", value: kanji_span_content.text() };
+    }
+
+    console.log(message.kanji);
+
     message.keyword = $(".translation").eq(0).text();
     message.radicals = $(".col-md-8").eq(1).text()
         .replace(/\s/g, " ")
