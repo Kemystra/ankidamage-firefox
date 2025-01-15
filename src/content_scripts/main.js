@@ -26,9 +26,11 @@ function scrapeKanjiInfo() {
 
     // From https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
     const ELEMENT_NODE = 1;
-    const TEXT_NODE = 3;
     if (kanji_span_content.prop("nodeType") === ELEMENT_NODE) {
-        message.kanji = { elem_type: "IMG", value: kanji_span_content.attr("src") };
+        message.kanji = {
+            elem_type: "IMG",
+            src: "https://www.kanjidamage.com" + kanji_span_content.attr("src")
+        };
     }
     else {
         message.kanji = { elem_type: "TEXT", value: kanji_span_content.text() };

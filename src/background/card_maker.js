@@ -3,6 +3,27 @@ browser.runtime.onMessage.addListener(message => {
 });
 
 function sendToAnki(data) {
+    // Process kanji field
+    // If it's an image, generate the appropriate JSON
+    // else just put in the value
+    let kanji_field_content = "";
+    let kanji_pic = {};
+    if (data.kanji.elem_type === "TEXT") {
+        kanji_field_content = data.kanji.value;
+    }
+    else if (data.kanji.elem_type === "IMG") {
+        kanji_pic = {
+            url: data.kanji.src,
+            // Use the original filename from the source URL
+            // Since it's always at the last part of the URL,
+            // we can just use pop()
+            filename: data.kanji.src.split('/').pop(),
+            fields: [
+                "kanji"
+            ]
+        }
+    }
+
     let requestBody = {
         action: "guiAddCards",
         version: 6,
@@ -11,7 +32,7 @@ function sendToAnki(data) {
                 deckName: "KANJIDAMAGE",
                 modelName: "KanjiDamage",
                 fields: {
-                    kanji: data.kanji,
+                    kanji: kanji_field_content,
                     mnemonics: data.mnemonics,
                     onyomi: data.onyomi,
                     kunyomis: kunyomiListMaker(data.kunyomiData),
@@ -20,7 +41,7 @@ function sendToAnki(data) {
                     "onyomi-sentence": data.onyomiSentence,
                 },
                 tags: [],
-                picture: []
+                picture: kanji_pic ? [ kanji_pic ] : [],
             }
         }
     };
