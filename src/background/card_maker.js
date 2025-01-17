@@ -24,6 +24,9 @@ function sendToAnki(data) {
         }
     }
 
+    console.log(kanji_pic);
+    console.log(Object.keys(kanji_pic).length === 0 ? [] : [ kanji_pic ]);
+
     let requestBody = {
         action: "guiAddCards",
         version: 6,
@@ -41,7 +44,8 @@ function sendToAnki(data) {
                     "onyomi-sentence": data.onyomiSentence,
                 },
                 tags: [],
-                picture: kanji_pic ? [ kanji_pic ] : [],
+                // If kanji_pic is empty, put empty array
+                pictures: Object.keys(kanji_pic).length === 0 ? [] : [ kanji_pic ]
             }
         }
     };
