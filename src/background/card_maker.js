@@ -17,7 +17,7 @@ function sendToAnki(data) {
             // Use the original filename from the source URL
             // Since it's always at the last part of the URL,
             // we can just use pop()
-            filename: data.kanji.src.split('/').pop(),
+            filename: "kanjidamage-" + data.kanji.src.split('/').pop(),
             fields: [
                 "kanji"
             ]
