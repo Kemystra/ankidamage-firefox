@@ -45,7 +45,7 @@ function sendToAnki(data) {
                 },
                 tags: [],
                 // If kanji_pic is empty, put empty array
-                pictures: Object.keys(kanji_pic).length === 0 ? [] : [ kanji_pic ]
+                picture: Object.keys(kanji_pic).length === 0 ? [] : [ kanji_pic ]
             }
         }
     };
