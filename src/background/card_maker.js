@@ -36,12 +36,12 @@ function sendToAnki(data) {
                 modelName: "KanjiDamage",
                 fields: {
                     kanji: kanji_field_content,
+                    kanji_name: data.kanjiName,
+                    radicals: data.radicals,
                     mnemonics: data.mnemonics,
                     onyomi: data.onyomi,
+                    onyomi_mnemonics: data.onyomiMnemonics,
                     kunyomis: kunyomiListMaker(data.kunyomiData),
-                    radicals: data.radicals,
-                    keyword: data.keyword,
-                    "onyomi-sentence": data.onyomiSentence,
                 },
                 tags: [],
                 // If kanji_pic is empty, put empty array

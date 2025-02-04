@@ -38,7 +38,7 @@ function scrapeKanjiInfo() {
 
     console.log(message.kanji);
 
-    message.keyword = $(".translation").eq(0).text();
+    message.kanjiName = $(".translation").eq(0).text();
     message.radicals = $(".col-md-8").eq(1).text()
         .replace(/\s/g, " ")
         .replace(message.kanji, "")
@@ -75,7 +75,7 @@ function scrapeKanjiInfo() {
 
     if(onyomiTable) {
         message.onyomi = onyomiTable.eq(0).text().trim();
-        message.onyomiSentence = onyomiTable.eq(1).text().trim();
+        message.onyomiMnemonics = onyomiTable.eq(1).text().trim();
     }
 
     message.kunyomiData = {};
