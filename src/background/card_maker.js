@@ -60,8 +60,8 @@ function kunyomiListMaker(obj) {
     for (const [key, val] of entryArray) {
         result += `
             <li class="kunyomi-item">
-                <p class="kunyomi-part kunyomi text">${key}</p>
-		<p class="kunyomi text">${val}</p>
+                <p>${key}</p>
+                <p>${val}</p>
             </li>
         `;
     }
