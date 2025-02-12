@@ -3,17 +3,17 @@
     "manifest_version": 2,
     "name": "AnkiDamage",
     "version": "1.0.2",
-  
+
     "description": "Scrape data from KanjiDamage's kanji site and use AnkiServer API to add new cards automatically.",
-  
+
     "icons": {
-      "48": "icons/icon48.png"
+      "48": "./icons/icon48.png"
     },
 
     "browser_action": {
-      "default_popup": "popup/popup.html",
+      "default_popup": "./built/popup/popup.html",
       "default_title": "AnkiDamage",
-      "default_icon": "icons/icon32.png"
+      "default_icon": "./icons/icon32.png"
     },
 
     "permissions": [
@@ -27,14 +27,14 @@
       {
         "matches": ["https://www.kanjidamage.com/kanji/*"],
         "js": [
-          "./content_scripts/main.js",
-          "./content_scripts/jquery-3.min.js"
+          "./built/content_scripts/main.js",
+          "./built/content_scripts/jquery-3.min.js"
         ]
       }
     ],
 
     "background": {
-      "scripts": ["./background/card_maker.js"],
+      "scripts": ["./built/background/card_maker.js"],
       "persistent": false
     },
 
