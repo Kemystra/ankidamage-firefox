@@ -3,11 +3,11 @@
     "manifest_version": 2,
     "name": "AnkiDamage",
     "version": "1.0.2",
-
+  
     "description": "Scrape data from KanjiDamage's kanji site and use AnkiServer API to add new cards automatically.",
-
+  
     "icons": {
-      "48": "./icons/icon48.png"
+      "48": "icons/icon48.png"
     },
 
     "browser_action": {
