@@ -3,3 +3,6 @@ web-ext-artifacts/
 
 # Ignore node_modules/
 node_modules/
+
+# Ignore built JS files
+built/
