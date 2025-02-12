@@ -1,0 +1,18 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "outDir": "./built",
+        "target": "ES5",
+
+        "allowJs": false,
+        "noEmitOnError": false,
+
+        // Don't automatically assume type any if type is missing
+        // or for the 'this' keyword
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+
+        "strictNullChecks": true
+    },
+    "include": ["./src/**/*"]
+}
