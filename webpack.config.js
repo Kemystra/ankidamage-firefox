@@ -1,4 +1,4 @@
-const { default: FileManagerPlugin } = require('filemanager-webpack-plugin')
+const FileManagerPlugin = require('filemanager-webpack-plugin')
 const path = require('path')
 
 // Copy the file, without alteration
