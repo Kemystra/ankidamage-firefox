@@ -11,7 +11,7 @@
     },
 
     "browser_action": {
-      "default_popup": "./built/popup/popup.html",
+      "default_popup": "./built/popup/index.html",
       "default_title": "AnkiDamage",
       "default_icon": "./icons/icon32.png"
     },
