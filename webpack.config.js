@@ -18,7 +18,7 @@ module.exports = {
     // goddamn it why so complicated
     mode: "development",
     entry: {
-        "content_scripts/main.js": "./src/content_scripts/main.js",
+        "content_scripts/main.js": "./src/content_scripts/main.ts",
         "background/card_maker.js": "./src/background/card_maker.js",
         "popup/main.js": "./src/popup/main.js"
     },
