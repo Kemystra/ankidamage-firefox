@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { Kanji } from '../kanji_obj_types';
 
 // Adding the hasRun property to the Window object
 // using declaration merging
@@ -29,7 +30,7 @@ declare global {
 
 // Best string manipulation project 2022
 function scrapeKanjiInfo() {
-    let message = {};
+    let kanji: Kanji = {};
 
     // There's always only one content in the span: either text or <img>
     let kanji_span_content = $(".kanji_character").eq(0).contents().eq(0);
@@ -37,22 +38,22 @@ function scrapeKanjiInfo() {
     // From https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
     const ELEMENT_NODE = 1;
     if (kanji_span_content.prop("nodeType") === ELEMENT_NODE) {
-        message.kanji = {
+        kanji.character = {
             elem_type: "IMG",
             src: "https://www.kanjidamage.com" + kanji_span_content.attr("src")
         };
     }
     else {
-        message.kanji = { elem_type: "TEXT", value: kanji_span_content.text() };
+        kanji.character = { elem_type: "TEXT", value: kanji_span_content.text() };
     }
 
-    console.log(message.kanji);
+    console.log(kanji.character);
 
-    message.kanjiName = $(".translation").eq(0).text();
-    message.radicals = $(".col-md-8").eq(1).text()
+    kanji.name = $(".translation").eq(0).text();
+    kanji.radicals = $(".col-md-8").eq(1).text()
         .replace(/\s/g, " ")
-        .replace(message.kanji, "")
-        .replace(message.keyword, "")
+        .replace(kanji.character, "")
+        .replace(kanji.name, "")
         .replace(" +", " + ")
         .trim();
 
@@ -75,7 +76,7 @@ function scrapeKanjiInfo() {
                 break;
 
             case "Mnemonic":
-                message.mnemonics = defTables.eq(i + 1).text().trim();
+                kanji.mnemonics = defTables.eq(i + 1).text().trim();
                 break;
 
             default:
@@ -84,13 +85,13 @@ function scrapeKanjiInfo() {
     }
 
     if(onyomiTable) {
-        message.onyomi = onyomiTable.eq(0).text().trim();
-        message.onyomiMnemonics = onyomiTable.eq(1).text().trim();
+        kanji.onyomi = onyomiTable.eq(0).text().trim();
+        kanji.onyomiMnemonics = onyomiTable.eq(1).text().trim();
     }
 
-    message.kunyomiData = {};
-    kunyomis = [];
-    kunyomiUsages = [];
+    kanji.kunyomiData = {};
+    let kunyomis: Array<string> = [];
+    let kunyomiUsages: Array<string> = [];
 
     if(kunyomiTable) {
         // RegEx FTW!!1!
@@ -118,8 +119,8 @@ function scrapeKanjiInfo() {
     }
 
     kunyomis.forEach((val, i) => {
-        message.kunyomiData[val] = kunyomiUsages[i];
+        kanji.kunyomiData[val] = kunyomiUsages[i];
     });
 
-    return message;
+    return kanji;
 }
