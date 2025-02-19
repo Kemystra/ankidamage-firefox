@@ -1,11 +1,11 @@
 type Kanji = {
-    character?: CharacterData;
-    name?: string;
-    radicals?: string;
-    mnemonics?: string;
-    onyomi?: string;
-    onyomiMnemonics?: string;
-    kunyomiData?: KunyomiData;
+    character: CharacterData;
+    name: string;
+    radicals: string;
+    mnemonics: string;
+    onyomi: string;
+    onyomiMnemonics: string;
+    kunyomiData: KunyomiData;
 }
 
 // Not sure if this is the best way to make interface aliases
