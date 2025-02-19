@@ -7,6 +7,9 @@
         "allowJs": false,
         "noEmitOnError": false,
 
+        // Enable interoperability between CommonJS and ES6 style imports and exports
+        "esModuleInterop": true,
+
         // Don't automatically assume type any if type is missing
         // or for the 'this' keyword
         "noImplicitAny": true,
