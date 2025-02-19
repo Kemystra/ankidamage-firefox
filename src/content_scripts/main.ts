@@ -27,7 +27,6 @@ declare global {
 })();
 
 
-
 // Best string manipulation project 2022
 function scrapeKanjiInfo() {
     let kanji: Kanji = {};
@@ -61,12 +60,12 @@ function scrapeKanjiInfo() {
 
     // Search through the main table, and look for the necessary sections
     let defTables = $(".col-md-12").eq(0).children();
-    for(let i = 0; i < defTables.length; i++) {
-        if(defTables.eq(i).prop("nodeName") !== "H2") {
+    for (let i = 0; i < defTables.length; i++) {
+        if (defTables.eq(i).prop("nodeName") !== "H2") {
             continue;
         }
 
-        switch(defTables.eq(i).text()) {
+        switch (defTables.eq(i).text()) {
             case "Onyomi":
                 onyomiTable = defTables.eq(i + 1).find("td");
                 break;
@@ -84,7 +83,7 @@ function scrapeKanjiInfo() {
         }
     }
 
-    if(onyomiTable) {
+    if (onyomiTable) {
         kanji.onyomi = onyomiTable.eq(0).text().trim();
         kanji.onyomiMnemonics = onyomiTable.eq(1).text().trim();
     }
@@ -93,7 +92,7 @@ function scrapeKanjiInfo() {
     let kunyomis: Array<string> = [];
     let kunyomiUsages: Array<string> = [];
 
-    if(kunyomiTable) {
+    if (kunyomiTable) {
         // RegEx FTW!!1!
         // Technically, you MAY be able to use a normal for loop
         // and avoid the use of if-else inside
