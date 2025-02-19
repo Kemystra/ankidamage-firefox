@@ -20,11 +20,15 @@
   },
   "homepage": "https://github.com/Kemystra/ankidamage-firefox#readme",
   "devDependencies": {
+    "@types/jquery": "^3.5.32",
     "filemanager-webpack-plugin": "^8.0.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.7.3",
     "web-ext": "^8.3.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "jquery": "^3.7.1"
   }
 }
