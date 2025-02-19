@@ -1,12 +1,22 @@
+import $ from 'jquery';
+
+// Adding the hasRun property to the Window object
+// using declaration merging
+declare global {
+    interface Window {
+        _hasRun?: boolean;
+    }
+}
+
 (() => {
     // Each time the user opens a popup, this script will be injected into the page
     // If it's opened multiple times, then there will be multiple instances of this script
     // The rest of them will be stopped since window.hasRun has been set to true by the first instance
-    if (window.hasRun) {
+    if (window._hasRun) {
         return;
     }
 
-    window.hasRun = true;
+    window._hasRun = true;
     browser.runtime.onMessage.addListener(message => {
         if (message.command === "scrapeSite") {
             let message = scrapeKanjiInfo();
