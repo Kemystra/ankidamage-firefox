@@ -1,4 +1,4 @@
-interface Kanji {
+type Kanji = {
     character?: CharacterData;
     name?: string;
     radicals?: string;
