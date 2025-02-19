@@ -3,4 +3,7 @@ interface Kanji {
     name?: string;
     radicals?: string;
     mnemonics?: string;
+    onyomi?: string;
+    onyomiMnemonics?: string;
+    kunyomiData?: KunyomiData;
 }
