@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { Kanji } from '../kanji_obj_types';
+import { Kanji, KunyomiData } from '../kanji_obj_types';
 
 // Adding the hasRun property to the Window object
 // using declaration merging
@@ -29,7 +29,13 @@ declare global {
 
 // Best string manipulation project 2022
 function scrapeKanjiInfo() {
-    let kanji: Kanji = {};
+    // Setting up default values here
+    // A bit dirty but it's the only place where I have to do this
+    let kanji: Kanji = {
+        character: { elem_type: "IMG", src: "" },
+        name: "", radicals: "", mnemonics: "",
+        kunyomiData: { "": "" }, onyomi: "", onyomiMnemonics: ""
+    };
 
     // There's always only one content in the span: either text or <img>
     let kanji_span_content = $(".kanji_character").eq(0).contents().eq(0);
