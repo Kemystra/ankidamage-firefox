@@ -60,8 +60,8 @@ async function uploadPicture(imageData: CharacterData) : Promise<string> {
             url: imageData.src
         };
 
-        let response = await yankiConnectClient.media.storeMediaFile(pictureData);
-        return response;
+        let filename = await yankiConnectClient.media.storeMediaFile(pictureData);
+        return filename;
     } catch(e) {
         throw e;
     }
