@@ -10,13 +10,24 @@ browser.runtime.onMessage.addListener(message => {
     sendToAnki(message);
 });
 
-async function uploadPicture(imageData: CharacterData) : Promise<Response> {
+async function uploadPicture(imageData: CharacterData) : Promise<string> {
     if (imageData.elem_type == "TEXT")
         throw new Error(WRONG_CHARACTER_DATA);
     try {
+        let pictureData = {
+            filename: generateFileName(imageData.src),
+            url: imageData.src
+        };
+
+        let response = await yankiConnectClient.media.storeMediaFile(pictureData);
+        return response;
     } catch(e) {
         throw e;
     }
+}
+
+function generateFileName(url: string) : string {
+    return "kanjidamage-" + url.split('/').pop();
 }
 
 function sendToAnki(data: Kanji) {
