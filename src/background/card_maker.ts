@@ -1,9 +1,21 @@
-import { Kanji, KunyomiData } from "../kanji_obj_types";
+import { Kanji, KunyomiData, CharacterData } from "../kanji_obj_types";
 
+
+const WRONG_CHARACTER_DATA = "INVALID_DATA";
+const ANKI_REMOTE_URL = "http://127.0.0.1:8765/";
 
 browser.runtime.onMessage.addListener(message => {
     sendToAnki(message);
 });
+
+async function uploadPicture(imageData: CharacterData) : Promise<Response> {
+    if (imageData.elem_type == "TEXT")
+        throw new Error(WRONG_CHARACTER_DATA);
+    try {
+    } catch(e) {
+        throw e;
+    }
+}
 
 function sendToAnki(data: Kanji) {
     // Process kanji field
@@ -40,7 +52,7 @@ function sendToAnki(data: Kanji) {
                 fields: {
                     kanji: kanji_field_content,
                     kanji_name: data.name,
-                    radicals: data.radicals,
+                    radicals: "",
                     mnemonics: data.mnemonics,
                     onyomi: data.onyomi,
                     onyomi_mnemonics: data.onyomiMnemonics,
@@ -53,7 +65,7 @@ function sendToAnki(data: Kanji) {
         }
     };
 
-    let request = new Request("http://127.0.0.1:8765/", { method: 'POST', body: JSON.stringify(requestBody) });
+    let request = new Request(ANKI_REMOTE_URL, { method: 'POST', body: JSON.stringify(requestBody) });
     fetch(request).catch(debug);
 }
 
