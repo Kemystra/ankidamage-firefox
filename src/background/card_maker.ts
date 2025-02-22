@@ -23,7 +23,7 @@ function sendToAnki(data: Kanji) {
             fields: {
                 kanji: interpretCharacterData(data.character),
                 kanji_name: data.name,
-                radicals: "",
+                radicals: interpretRadicalsData(data.radicals),
                 mnemonics: data.mnemonics,
                 onyomi: data.onyomi,
                 onyomi_mnemonics: data.onyomiMnemonics,
@@ -36,6 +36,17 @@ function sendToAnki(data: Kanji) {
     yankiConnectClient.graphical
         .guiAddCards(cardData)
         .catch(debug);
+}
+
+function interpretRadicalsData(radicals: Record<string, CharacterData>) : string {
+    let characterNamePair = [];
+    for (const [name, char] of Object.entries(radicals)) {
+        let characterAsString = interpretCharacterData(char);
+        // Convert it to "[char] ([name])"
+        characterNamePair.push(`${characterAsString} (${name})`)
+    }
+
+    return characterNamePair.join(" + ")
 }
 
 // The character might not exist in the Unicode specification,
