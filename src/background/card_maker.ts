@@ -30,37 +30,23 @@ function generateFileName(url: string) : string {
     return "kanjidamage-" + url.split('/').pop();
 }
 
+function processCharacterData(charData: CharacterData) : string {
+    switch(charData.elem_type) {
+        case "TEXT":
+            return charData.value;
+        case "IMG":
+            let filename = uploadPicture(charData);
+            return `<img src="${filename}"`;
+    }
+}
+
 function sendToAnki(data: Kanji) {
-    // Process kanji field
-    // If it's an image, generate the appropriate JSON
-    // else just put in the value
-    let kanji_field_content = "";
-    let kanji_pic = {};
-    if (data.character.elem_type === "TEXT") {
-        kanji_field_content = data.character.value;
-    }
-    else if (data.character.elem_type === "IMG") {
-        kanji_pic = {
-            url: data.character.src,
-            // Use the original filename from the source URL
-            // Since it's always at the last part of the URL,
-            // we can just use pop()
-            filename: "kanjidamage-" + data.character.src.split('/').pop(),
-            fields: [
-                "character"
-            ]
-        }
-    }
-
-    console.log(kanji_pic);
-    console.log(Object.keys(kanji_pic).length === 0 ? [] : [ kanji_pic ]);
-
     let cardData = {
         note: {
             deckName: "KANJIDAMAGE",
             modelName: "KanjiDamage",
             fields: {
-                kanji: kanji_field_content,
+                kanji: processCharacterData(data.character),
                 kanji_name: data.name,
                 radicals: "",
                 mnemonics: data.mnemonics,
