@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@types/firefox-webext-browser": "^120.0.4",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "yanki-connect": "^2.1.10"
   }
 }
