@@ -1,8 +1,10 @@
 import { Kanji, KunyomiData, CharacterData } from "../kanji_obj_types";
+import { YankiConnect } from "yanki-connect";
 
 
 const WRONG_CHARACTER_DATA = "INVALID_DATA";
-const ANKI_REMOTE_URL = "http://127.0.0.1:8765/";
+
+const yankiConnectClient = new YankiConnect();
 
 browser.runtime.onMessage.addListener(message => {
     sendToAnki(message);
@@ -42,31 +44,26 @@ function sendToAnki(data: Kanji) {
     console.log(kanji_pic);
     console.log(Object.keys(kanji_pic).length === 0 ? [] : [ kanji_pic ]);
 
-    let requestBody = {
-        action: "guiAddCards",
-        version: 6,
-        params: {
-            note: {
-                deckName: "KANJIDAMAGE",
-                modelName: "KanjiDamage",
-                fields: {
-                    kanji: kanji_field_content,
-                    kanji_name: data.name,
-                    radicals: "",
-                    mnemonics: data.mnemonics,
-                    onyomi: data.onyomi,
-                    onyomi_mnemonics: data.onyomiMnemonics,
-                    kunyomis: kunyomiListMaker(data.kunyomiData),
-                },
-                tags: [],
-                // If kanji_pic is empty, put empty array
-                picture: Object.keys(kanji_pic).length === 0 ? [] : [ kanji_pic ]
-            }
+    let cardData = {
+        note: {
+            deckName: "KANJIDAMAGE",
+            modelName: "KanjiDamage",
+            fields: {
+                kanji: kanji_field_content,
+                kanji_name: data.name,
+                radicals: "",
+                mnemonics: data.mnemonics,
+                onyomi: data.onyomi,
+                onyomi_mnemonics: data.onyomiMnemonics,
+                kunyomis: kunyomiListMaker(data.kunyomiData),
+            },
+            tags: [],
         }
     };
 
-    let request = new Request(ANKI_REMOTE_URL, { method: 'POST', body: JSON.stringify(requestBody) });
-    fetch(request).catch(debug);
+    yankiConnectClient.graphical
+        .guiAddCards(cardData)
+        .catch(debug);
 }
 
 function kunyomiListMaker(obj: KunyomiData) {
