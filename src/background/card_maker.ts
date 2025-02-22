@@ -10,36 +10,6 @@ browser.runtime.onMessage.addListener(message => {
     sendToAnki(message);
 });
 
-async function uploadPicture(imageData: CharacterData) : Promise<string> {
-    if (imageData.elem_type == "TEXT")
-        throw new Error(WRONG_CHARACTER_DATA);
-    try {
-        let pictureData = {
-            filename: generateFileName(imageData.src),
-            url: imageData.src
-        };
-
-        let response = await yankiConnectClient.media.storeMediaFile(pictureData);
-        return response;
-    } catch(e) {
-        throw e;
-    }
-}
-
-function generateFileName(url: string) : string {
-    return "kanjidamage-" + url.split('/').pop();
-}
-
-function processCharacterData(charData: CharacterData) : string {
-    switch(charData.elem_type) {
-        case "TEXT":
-            return charData.value;
-        case "IMG":
-            let filename = uploadPicture(charData);
-            return `<img src="${filename}"`;
-    }
-}
-
 function sendToAnki(data: Kanji) {
     let cardData = {
         note: {
@@ -61,6 +31,32 @@ function sendToAnki(data: Kanji) {
     yankiConnectClient.graphical
         .guiAddCards(cardData)
         .catch(debug);
+}
+
+async function uploadPicture(imageData: CharacterData) : Promise<string> {
+    if (imageData.elem_type == "TEXT")
+        throw new Error(WRONG_CHARACTER_DATA);
+    try {
+        let pictureData = {
+            filename: "kanjidamage-" + imageData.src.split('/').pop(),
+            url: imageData.src
+        };
+
+        let response = await yankiConnectClient.media.storeMediaFile(pictureData);
+        return response;
+    } catch(e) {
+        throw e;
+    }
+}
+
+function processCharacterData(charData: CharacterData) : string {
+    switch(charData.elem_type) {
+        case "TEXT":
+            return charData.value;
+        case "IMG":
+            let filename = uploadPicture(charData);
+            return `<img src="${filename}"`;
+    }
 }
 
 function kunyomiListMaker(obj: KunyomiData) {
