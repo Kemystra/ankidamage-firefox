@@ -1,7 +1,7 @@
 type Kanji = {
     character: CharacterData;
     name: string;
-    radicals: string;
+    radicals: Record<string, CharacterData>;
     mnemonics: string;
     onyomi: string;
     onyomiMnemonics: string;
