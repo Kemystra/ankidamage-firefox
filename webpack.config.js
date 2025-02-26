@@ -22,6 +22,7 @@ module.exports = {
         "background/card_maker.js": "./src/background/card_maker.ts",
         "popup/main.js": "./src/popup/main.js"
     },
+    devtool: "source-map",
 
     module: {
         rules: [
