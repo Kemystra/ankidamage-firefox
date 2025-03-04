@@ -16,7 +16,7 @@ type Card = {
             onyomi_mnemonics: string;
             kunyomis: string;
         },
-        tags: [],
+        tags: Array<string>,
     }
 }
 
@@ -51,7 +51,7 @@ class AnkiConnectCaller {
         return this._callApi(media, "storeMediaFile");
     }
 
-    async graphicalAddCard(card: Card) : Promise<string> {
+    async guiAddCards(card: Card) : Promise<string> {
         return this._callApi(card, "guiAddCards");
     }
 };

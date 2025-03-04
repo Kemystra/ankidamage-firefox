@@ -1,10 +1,9 @@
 import { Kanji, KunyomiData, CharacterData } from "../kanji_obj_types";
-import { YankiConnect } from "yanki-connect";
-
+import { AnkiConnectCaller } from "./anki_connect";
 
 const WRONG_CHARACTER_DATA = "INVALID_DATA";
 
-const yankiConnectClient = new YankiConnect();
+const ankiConnectClient = new AnkiConnectCaller();
 
 browser.runtime.onMessage.addListener(message => {
     sendToAnki(message);
@@ -33,7 +32,7 @@ function sendToAnki(data: Kanji) {
         }
     };
 
-    yankiConnectClient.graphical
+    ankiConnectClient
         .guiAddCards(cardData)
         .catch(debug);
 }
@@ -71,7 +70,7 @@ async function uploadPicture(imageData: CharacterData) : Promise<string> {
             url: imageData.src
         };
 
-        let filename = await yankiConnectClient.media.storeMediaFile(pictureData);
+        let filename = await ankiConnectClient.storeMediaFile(pictureData);
         return filename;
     } catch(e) {
         throw e;
