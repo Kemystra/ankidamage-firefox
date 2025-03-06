@@ -3,6 +3,7 @@
     "compilerOptions": {
         "outDir": "./built",
         "target": "ES5",
+        "lib": [ "ES2017", "dom" ],
 
         "allowJs": false,
         "noEmitOnError": false,
