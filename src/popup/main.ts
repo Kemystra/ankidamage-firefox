@@ -11,6 +11,6 @@ function scrapeSite(tabs) {
     });
 }
 
-function reportError(error) {
+function reportError(error: string) {
     document.getElementById("error").innerHTML = error;
 }
