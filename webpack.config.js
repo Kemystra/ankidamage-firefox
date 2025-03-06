@@ -20,7 +20,7 @@ module.exports = {
     entry: {
         "content_scripts/main.js": "./src/content_scripts/main.ts",
         "background/card_maker.js": "./src/background/card_maker.ts",
-        "popup/main.js": "./src/popup/main.js"
+        "popup/main.js": "./src/popup/main.ts"
     },
     devtool: "source-map",
 

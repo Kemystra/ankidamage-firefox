@@ -5,12 +5,12 @@ document.addEventListener("click", e => {
     .catch(reportError);
 });
 
-function scrapeSite(tabs) {
-    browser.tabs.sendMessage(tabs[0].id, {
+function scrapeSite(tabs: Array<browser.tabs.Tab>) {
+    browser.tabs.sendMessage(tabs[0].id!, {
         command: "scrapeSite"
     });
 }
 
 function reportError(error: string) {
-    document.getElementById("error").innerHTML = error;
+    document.getElementById("error")!.innerHTML = error;
 }
