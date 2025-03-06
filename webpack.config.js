@@ -42,5 +42,8 @@ module.exports = {
         clean: true
     },
 
-    plugins: [new FileManagerPlugin(FILE_MANAGER_OPTIONS)]
+    plugins: [new FileManagerPlugin(FILE_MANAGER_OPTIONS)],
+    resolve: {
+        extensions: ['.ts', '...']
+    }
 }
