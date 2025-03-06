@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { Kanji, Radicals } from '../kanji_obj_types';
+import { Kanji, CharacterData } from '../kanji_obj_types';
 
 // Adding the hasRun property to the Window object
 // using declaration merging
@@ -39,18 +39,7 @@ function scrapeKanjiInfo() {
 
     // There's always only one content in the span: either text or <img>
     let kanji_span_content = $(".kanji_character").eq(0).contents().eq(0);
-
-    // From https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-    const ELEMENT_NODE = 1;
-    if (kanji_span_content.prop("nodeType") === ELEMENT_NODE) {
-        kanji.character = {
-            elem_type: "IMG",
-            src: "https://www.kanjidamage.com" + kanji_span_content.attr("src")
-        };
-    }
-    else {
-        kanji.character = { elem_type: "TEXT", value: kanji_span_content.text() };
-    }
+    kanji.character = parseRawCharacters(kanji_span_content);
 
     kanji.name = $(".translation").eq(0).text();
 
@@ -132,4 +121,18 @@ function scrapeKanjiInfo() {
     });
 
     return kanji;
+}
+
+// Parse the character nodes and return the appropriate Character object
+function parseRawCharacters(characterNode: JQuery<Node>) : CharacterData {
+    // From https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+    if (characterNode.prop("nodeType") === Node.ELEMENT_NODE) {
+        return {
+            elem_type: "IMG",
+            src: "https://www.kanjidamage.com" + characterNode.attr("src")
+        };
+    }
+    else {
+        return { elem_type: "TEXT", value: characterNode.text() };
+    }
 }
