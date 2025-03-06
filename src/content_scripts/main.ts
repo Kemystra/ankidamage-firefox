@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { Kanji, KunyomiData } from '../kanji_obj_types';
+import { Kanji, Radicals } from '../kanji_obj_types';
 
 // Adding the hasRun property to the Window object
 // using declaration merging
@@ -53,7 +53,12 @@ function scrapeKanjiInfo() {
     }
 
     kanji.name = $(".translation").eq(0).text();
-    console.log($(".col-md-8").eq(1).contents());
+
+    let raw_radicals = $("a.component");
+    for (let i = 0; i < raw_radicals.length; i++) {
+        let radical = raw_radicals.eq(i);
+    }
+
     //kanji.radicals = $(".col-md-8").eq(1).text()
     //    .replace(/\s/g, " ")
     //    .replace(kanji.character, "")
