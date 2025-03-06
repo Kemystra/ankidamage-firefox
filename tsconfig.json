@@ -15,7 +15,8 @@
         "noImplicitAny": true,
         "noImplicitThis": true,
 
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "types": [ "firefox-webext-browser" ]
     },
     "include": ["./src/**/*"]
 }
