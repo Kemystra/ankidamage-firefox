@@ -38,7 +38,7 @@ function sendToAnki(data: Kanji) {
 }
 
 function interpretRadicalsData(radicals: Record<string, CharacterData>) : string {
-    let characterNamePair = [];
+    let characterNamePair: Array<string> = [];
     for (const [name, char] of Object.entries(radicals)) {
         let characterAsString = interpretCharacterData(char);
         // Convert it to "[char] ([name])"
