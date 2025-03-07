@@ -50,18 +50,11 @@ function scrapeKanjiInfo() {
         let radicalName = radical
             .next()
             .text()
-            .trim()
-            .replace(/\(\)/, "");
+            .replace(/\(\)/, "")
+            .trim();
 
         kanji.radicals[radicalName] = parseRawCharacters(radical.contents().eq(0));
     }
-
-    //kanji.radicals = $(".col-md-8").eq(1).text()
-    //    .replace(/\s/g, " ")
-    //    .replace(kanji.character, "")
-    //    .replace(kanji.name, "")
-    //    .replace(" +", " + ")
-    //    .trim();
 
     let kunyomiTable, onyomiTable;
 
