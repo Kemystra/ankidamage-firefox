@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { Kanji, CharacterData } from '../kanji_obj_types';
+import { Kanji, CharacterData, Tag } from '../kanji_obj_types';
 
 // Adding the hasRun property to the Window object
 // using declaration merging
@@ -122,6 +122,13 @@ function scrapeKanjiInfo() {
     });
 
     return kanji;
+}
+
+function parseTag(tagElement: JQuery<HTMLAnchorElement>) : Tag {
+    return {
+        name: tagElement.text(),
+        href: tagElement.attr("href")!
+    }
 }
 
 // Parse the character nodes and return the appropriate Character object
