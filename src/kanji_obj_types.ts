@@ -17,4 +17,9 @@ type CharacterData =
     { elem_type: "IMG"; src: string; } |
     { elem_type: "TEXT"; value: string; }
 
-export { Kanji, Kunyomis, Radicals, CharacterData };
+type Tag = {
+    name: string;
+    href: string;
+}
+
+export { Kanji, Kunyomis, Radicals, CharacterData, Tag };
