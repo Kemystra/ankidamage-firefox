@@ -1,4 +1,4 @@
-import { Kanji, KunyomiData, CharacterData } from "../kanji_obj_types";
+import { Kanji, Kunyomis, CharacterData } from "../kanji_obj_types";
 import { AnkiConnectCaller } from "./anki_connect";
 
 const WRONG_CHARACTER_DATA = "INVALID_DATA";
@@ -77,7 +77,7 @@ async function uploadPicture(imageData: CharacterData) : Promise<string> {
     }
 }
 
-function kunyomiListMaker(obj: KunyomiData) {
+function kunyomiListMaker(obj: Kunyomis) {
     let result = `<ul id="kunyomi-list">`
     let entryArray = Object.entries(obj);
     for (const [key, val] of entryArray) {
