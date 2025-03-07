@@ -1,4 +1,4 @@
-import { Kanji, Kunyomis, CharacterData } from "../kanji_obj_types";
+import { Kanji, Kunyomis, CharacterData, Radical } from "../kanji_obj_types";
 import { AnkiConnectCaller } from "./anki_connect";
 
 const WRONG_CHARACTER_DATA = "INVALID_DATA";
@@ -37,7 +37,7 @@ function sendToAnki(data: Kanji) {
         .catch(debug);
 }
 
-function interpretRadicalsData(radicals: Record<string, CharacterData>) : string {
+function interpretRadicalsData(radicals: Array<Radical>) : string {
     let characterNamePair: Array<string> = [];
     for (const [name, char] of Object.entries(radicals)) {
         let characterAsString = interpretCharacterData(char);
