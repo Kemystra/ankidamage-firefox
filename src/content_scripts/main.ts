@@ -43,9 +43,17 @@ function scrapeKanjiInfo() {
 
     kanji.name = $(".translation").eq(0).text();
 
-    let raw_radicals = $("a.component");
-    for (let i = 0; i < raw_radicals.length; i++) {
-        let radical = raw_radicals.eq(i);
+    kanji.radicals = {};
+    let rawRadicals = $("a.component");
+    for (let i = 0; i < rawRadicals.length; i++) {
+        let radical = rawRadicals.eq(i);
+        let radicalName = radical
+            .next()
+            .text()
+            .trim()
+            .replace(/\(\)/, "");
+
+        kanji.radicals[radicalName] = parseRawCharacters(radical.contents().eq(0));
     }
 
     //kanji.radicals = $(".col-md-8").eq(1).text()
