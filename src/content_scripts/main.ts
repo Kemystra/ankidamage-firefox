@@ -43,7 +43,29 @@ function scrapeKanjiInfo() {
 
     kanji.name = $(".translation").eq(0).text();
 
-    kanji.radicals = [];
+    let characterAndRadicalsElements = $(".col-md-8").eq(0).contents();
+    let i = 3;
+    while (i < characterAndRadicalsElements.length) {
+        let radicalCharacter = parseRawCharacters(characterAndRadicalsElements.eq(i));
+        let radicalName = characterAndRadicalsElements
+            .eq(++i)
+            .text()
+            .replace(/\(\)/, "")
+            .trim();
+
+        let radicalTags: Array<Tag> = [];
+        let newIndex = 0;
+        if (isElementTag(characterAndRadicalsElements.eq(++i))) {
+            [radicalTags, newIndex] = loopThroughAllTags(characterAndRadicalsElements, i);
+            i = newIndex;
+        }
+
+        kanji.radicals.push({
+            character: radicalCharacter,
+            name: radicalName,
+            tags: radicalTags
+        });
+    }
     //let rawRadicals = $("a.component");
     //for (let i = 0; i < rawRadicals.length; i++) {
     //    let radical = rawRadicals.eq(i);
@@ -122,6 +144,23 @@ function scrapeKanjiInfo() {
     });
 
     return kanji;
+}
+
+function loopThroughAllTags(rawContents: JQuery<Node>, startIndex: number) : [Array<Tag>, number] {
+    let i = startIndex;
+    let tags = [];
+    while (isElementTag(rawContents.eq(i))) {
+        tags.push(
+            parseTag(rawContents.eq(i) as JQuery<HTMLAnchorElement>)
+        );
+        i++;
+    }
+
+    return [tags, i];
+}
+
+function isElementTag(element: JQuery<Node>) : boolean {
+    return element.hasClass("label") && element.hasClass("label-info");
 }
 
 function parseTag(tagElement: JQuery<HTMLAnchorElement>) : Tag {
