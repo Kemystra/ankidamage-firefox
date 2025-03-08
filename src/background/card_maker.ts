@@ -43,7 +43,7 @@ async function interpretRadicalsData(radicals: Array<Radical>) : Promise<string>
     for (const radical of radicals) {
         let characterAsString = await interpretCharacterData(radical.character);
 
-        // Convert it to "[char] ([name])"
+        // Stringify it to "[char] ([name]) [tag1][tag2]...."
         characterNamePair.push(`${characterAsString} (${radical.name}) ${interpretTags(radical.tags)}`)
     }
 
@@ -63,6 +63,9 @@ async function interpretCharacterData(charData: CharacterData) : Promise<string>
     }
 }
 
+// Tags are those links with turqoise background that gives additional info
+// e.g: Same-ON, F, SOLO, etc.
+// Refer to https://www.kanjidamage.com/tags for a list of them
 function interpretTags(tags: Array<Tag>) : string {
     let stringifiedTags = "";
     for (const tag of tags) {

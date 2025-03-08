@@ -44,6 +44,7 @@ function scrapeKanjiInfo() {
     kanji.name = $(".translation").eq(0).text();
 
     let characterAndRadicalsElements = $(".col-md-8").eq(1).contents();
+    // The first three elements are not part of the radicals
     let i = 3;
     while (i < characterAndRadicalsElements.length) {
         let radicalCharacter = parseRawCharacters(
@@ -71,18 +72,6 @@ function scrapeKanjiInfo() {
         // Skip the text node of the plus sign (" + ")
         i++;
     }
-
-    //let rawRadicals = $("a.component");
-    //for (let i = 0; i < rawRadicals.length; i++) {
-    //    let radical = rawRadicals.eq(i);
-    //    let radicalName = radical
-    //        .next()
-    //        .text()
-    //        .replace(/\(\)/, "")
-    //        .trim();
-    //
-    //    kanji.radicals[radicalName] = parseRawCharacters(radical.contents().eq(0));
-    //}
 
     let kunyomiTable, onyomiTable;
 
@@ -152,6 +141,7 @@ function scrapeKanjiInfo() {
     return kanji;
 }
 
+// -- Tags parsing section --
 function loopThroughAllTags(rawContents: JQuery<Node>, startIndex: number) : [Array<Tag>, number] {
     let i = startIndex;
     let tags = [];
@@ -175,6 +165,7 @@ function parseTag(tagElement: JQuery<HTMLAnchorElement>) : Tag {
         href: tagElement.attr("href")!
     }
 }
+// -- End of tags parsing section --
 
 // Parse the character nodes and return the appropriate Character object
 function parseRawCharacters(characterNode: JQuery<Node>) : CharacterData {
