@@ -59,7 +59,7 @@ async function interpretCharacterData(charData: CharacterData) : Promise<string>
             return charData.value;
         case "IMG":
             let filename = await uploadPicture(charData);
-            return `<img src="${filename}"`;
+            return `<img src="${filename}">`;
     }
 }
 
