@@ -69,7 +69,7 @@ async function interpretCharacterData(charData: CharacterData) : Promise<string>
 function interpretTags(tags: Array<Tag>) : string {
     let stringifiedTags = "";
     for (const tag of tags) {
-        stringifiedTags += `<a href="${tag.href}">${tag.name}</a>`;
+        stringifiedTags += `<a href="${KANJIDAMAGE_DOMAIN + tag.href}">${tag.name}</a>`;
     }
 
     return stringifiedTags;
