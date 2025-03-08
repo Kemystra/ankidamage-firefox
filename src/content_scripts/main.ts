@@ -52,7 +52,7 @@ function scrapeKanjiInfo() {
         let radicalName = characterAndRadicalsElements
             .eq(++i)
             .text()
-            .replace(/\(\)/, "")
+            .replace(/\(|\)/g, "")
             .trim();
 
         let radicalTags: Array<Tag> = [];
