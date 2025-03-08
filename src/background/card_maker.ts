@@ -1,7 +1,8 @@
-import { Kanji, Kunyomis, CharacterData, Radical } from "../kanji_obj_types";
+import { Kanji, Kunyomis, CharacterData, Radical, Tag } from "../kanji_obj_types";
 import { AnkiConnectCaller } from "./anki_connect";
 
 const WRONG_CHARACTER_DATA = "INVALID_DATA";
+const KANJIDAMAGE_DOMAIN = "https://www.kanjidamage.com";
 
 const ankiConnectClient = new AnkiConnectCaller();
 
@@ -39,10 +40,11 @@ function sendToAnki(data: Kanji) {
 
 function interpretRadicalsData(radicals: Array<Radical>) : string {
     let characterNamePair: Array<string> = [];
-    for (const [name, char] of Object.entries(radicals)) {
-        let characterAsString = interpretCharacterData(char);
+    for (const radical of radicals) {
+        let characterAsString = interpretCharacterData(radical.character);
+
         // Convert it to "[char] ([name])"
-        characterNamePair.push(`${characterAsString} (${name})`)
+        characterNamePair.push(`${characterAsString} (${radical.name}) ${interpretTags(radical.tags)}`)
     }
 
     return characterNamePair.join(" + ")
@@ -59,6 +61,15 @@ function interpretCharacterData(charData: CharacterData) : string {
             let filename = uploadPicture(charData);
             return `<img src="${filename}"`;
     }
+}
+
+function interpretTags(tags: Array<Tag>) : string {
+    let stringifiedTags = "";
+    for (const tag of tags) {
+        stringifiedTags += `<a href="${tag.href}">${tag.name}</a>`;
+    }
+
+    return stringifiedTags;
 }
 
 async function uploadPicture(imageData: CharacterData) : Promise<string> {

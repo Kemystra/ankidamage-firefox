@@ -43,10 +43,12 @@ function scrapeKanjiInfo() {
 
     kanji.name = $(".translation").eq(0).text();
 
-    let characterAndRadicalsElements = $(".col-md-8").eq(0).contents();
+    let characterAndRadicalsElements = $(".col-md-8").eq(1).contents();
     let i = 3;
     while (i < characterAndRadicalsElements.length) {
-        let radicalCharacter = parseRawCharacters(characterAndRadicalsElements.eq(i));
+        let radicalCharacter = parseRawCharacters(
+            characterAndRadicalsElements.eq(i).contents().eq(0)
+        );
         let radicalName = characterAndRadicalsElements
             .eq(++i)
             .text()
@@ -65,7 +67,11 @@ function scrapeKanjiInfo() {
             name: radicalName,
             tags: radicalTags
         });
+
+        // Skip the text node of the plus sign (" + ")
+        i++;
     }
+
     //let rawRadicals = $("a.component");
     //for (let i = 0; i < rawRadicals.length; i++) {
     //    let radical = rawRadicals.eq(i);
