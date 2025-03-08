@@ -7,7 +7,7 @@ const KANJIDAMAGE_DOMAIN = "https://www.kanjidamage.com";
 const ankiConnectClient = new AnkiConnectCaller();
 
 browser.runtime.onMessage.addListener(message => {
-    sendToAnki(message);
+    sendToAnki(message).then().catch(debug);
 });
 
 // Anki cards only accept plain text or HTML inside each of its fields.
@@ -15,15 +15,15 @@ browser.runtime.onMessage.addListener(message => {
 // Here we interpret the raw data that we got after scraping
 // into plain text or HTML.
 
-function sendToAnki(data: Kanji) {
+async function sendToAnki(data: Kanji) {
     let cardData = {
         note: {
             deckName: "KANJIDAMAGE",
             modelName: "KanjiDamage",
             fields: {
-                kanji: interpretCharacterData(data.character),
+                kanji: await interpretCharacterData(data.character),
                 kanji_name: data.name,
-                radicals: interpretRadicalsData(data.radicals),
+                radicals: await interpretRadicalsData(data.radicals),
                 mnemonics: data.mnemonics,
                 onyomi: data.onyomi,
                 onyomi_mnemonics: data.onyomiMnemonics,
@@ -38,10 +38,10 @@ function sendToAnki(data: Kanji) {
         .catch(debug);
 }
 
-function interpretRadicalsData(radicals: Array<Radical>) : string {
+async function interpretRadicalsData(radicals: Array<Radical>) : Promise<string> {
     let characterNamePair: Array<string> = [];
     for (const radical of radicals) {
-        let characterAsString = interpretCharacterData(radical.character);
+        let characterAsString = await interpretCharacterData(radical.character);
 
         // Convert it to "[char] ([name])"
         characterNamePair.push(`${characterAsString} (${radical.name}) ${interpretTags(radical.tags)}`)
@@ -53,12 +53,12 @@ function interpretRadicalsData(radicals: Array<Radical>) : string {
 // The character might not exist in the Unicode specification,
 // so the website shows it using images.
 // We input it into Anki as <img> tags
-function interpretCharacterData(charData: CharacterData) : string {
+async function interpretCharacterData(charData: CharacterData) : Promise<string> {
     switch(charData.elem_type) {
         case "TEXT":
             return charData.value;
         case "IMG":
-            let filename = uploadPicture(charData);
+            let filename = await uploadPicture(charData);
             return `<img src="${filename}"`;
     }
 }
