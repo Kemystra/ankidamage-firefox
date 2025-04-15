@@ -46,8 +46,6 @@ function scrapeKanjiInfo() {
     let kanjiTagRawContent = $(".col-md-4.text-righted").eq(0).contents().eq(5).contents();
     kanji.tags = loopThroughAllTags(kanjiTagRawContent, 0)[0];
 
-    console.log($(".col-md-4.text-righted").eq(0).contents())
-
     let characterAndRadicalsElements = $(".col-md-8").eq(1).contents();
     // The first three elements are not part of the radicals
     let i = 3;
