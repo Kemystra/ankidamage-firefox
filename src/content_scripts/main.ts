@@ -162,7 +162,6 @@ function isElementTag(element: JQuery<Node>) : boolean {
 function parseTag(tagElement: JQuery<HTMLAnchorElement>) : Tag {
     return {
         name: tagElement.text(),
-        href: tagElement.attr("href")!
     }
 }
 // -- End of tags parsing section --

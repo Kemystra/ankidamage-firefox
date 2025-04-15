@@ -23,7 +23,6 @@ type CharacterData =
 
 type Tag = {
     name: string;
-    href: string;
 }
 
 export { Kanji, Kunyomis, Radical, CharacterData, Tag };
