@@ -22,7 +22,7 @@ async function sendToAnki(data: Kanji) {
             modelName: "KanjiDamage",
             fields: {
                 kanji: await interpretCharacterData(data.character),
-                kanji_name: data.name,
+                kanji_name: data.name + " " + interpretTags(data.tags),
                 radicals: await interpretRadicalsData(data.radicals),
                 mnemonics: data.mnemonics,
                 onyomi: data.onyomi,

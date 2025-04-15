@@ -33,7 +33,7 @@ function scrapeKanjiInfo() {
     // A bit dirty but it's the only place where I have to do this
     let kanji: Kanji = {
         character: { elem_type: "IMG", src: "" },
-        name: "", radicals: [], mnemonics: "",
+        name: "", tags: [], radicals: [], mnemonics: "",
         kunyomiData: { "": "" }, onyomi: "", onyomiMnemonics: ""
     };
 
@@ -42,6 +42,11 @@ function scrapeKanjiInfo() {
     kanji.character = parseRawCharacters(kanji_span_content);
 
     kanji.name = $(".translation").eq(0).text();
+
+    let kanjiTagRawContent = $(".col-md-4.text-righted").eq(0).contents().eq(5).contents();
+    kanji.tags = loopThroughAllTags(kanjiTagRawContent, 0)[0];
+
+    console.log($(".col-md-4.text-righted").eq(0).contents())
 
     let characterAndRadicalsElements = $(".col-md-8").eq(1).contents();
     // The first three elements are not part of the radicals
