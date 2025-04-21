@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "webpack --watch",
-    "rock_n_roll": "web-ext build",
-    "start:firefox": "web-ext run --source-dir ."
+    "start:firefox": "concurrently --kill-others \"web-ext run --source-dir . --devtools\" \"webpack --watch\""
   },
   "repository": {
     "type": "git",
