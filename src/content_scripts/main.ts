@@ -145,7 +145,7 @@ function scrapeKanjiInfo() {
 }
 
 // -- Tags parsing section --
-function loopThroughAllTags(rawContents: JQuery<Node>, startIndex: number) : [Array<Tag>, number] {
+function loopThroughAllTags(rawContents: JQuery<Node>, startIndex: number): [Array<Tag>, number] {
     let i = startIndex;
     let tags = [];
     while (isElementTag(rawContents.eq(i))) {
@@ -158,11 +158,11 @@ function loopThroughAllTags(rawContents: JQuery<Node>, startIndex: number) : [Ar
     return [tags, i];
 }
 
-function isElementTag(element: JQuery<Node>) : boolean {
+function isElementTag(element: JQuery<Node>): boolean {
     return element.hasClass("label") && element.hasClass("label-info");
 }
 
-function parseTag(tagElement: JQuery<HTMLAnchorElement>) : Tag {
+function parseTag(tagElement: JQuery<HTMLAnchorElement>): Tag {
     return {
         name: tagElement.text(),
     }
@@ -170,7 +170,7 @@ function parseTag(tagElement: JQuery<HTMLAnchorElement>) : Tag {
 // -- End of tags parsing section --
 
 // Parse the character nodes and return the appropriate Character object
-function parseRawCharacters(characterNode: JQuery<Node>) : CharacterData {
+function parseRawCharacters(characterNode: JQuery<Node>): CharacterData {
     // From https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
     if (characterNode.prop("nodeType") === Node.ELEMENT_NODE) {
         return {
