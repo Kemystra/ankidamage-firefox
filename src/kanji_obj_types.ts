@@ -11,7 +11,7 @@ type Kanji = {
 
 // Not sure if this is the best way to make interface aliases
 type Kunyomi = {
-    character: string;
+    reading: string;
     meaning: string;
     tags: Array<Tag>;
 }
