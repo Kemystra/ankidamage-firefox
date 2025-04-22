@@ -7,7 +7,7 @@ const KANJIDAMAGE_DOMAIN = "https://www.kanjidamage.com";
 const ankiConnectClient = new AnkiConnectCaller();
 
 browser.runtime.onMessage.addListener(message => {
-    sendToAnki(message).then().catch(emit_error);
+    sendToAnki(message).then().catch(emitError);
 });
 
 // Anki cards only accept plain text or HTML inside each of its fields.
@@ -35,7 +35,7 @@ async function sendToAnki(data: Kanji) {
 
     ankiConnectClient
         .guiAddCards(cardData)
-        .catch(emit_error);
+        .catch(emitError);
 }
 
 async function interpretRadicalsData(radicals: Array<Radical>) : Promise<string> {
@@ -106,9 +106,15 @@ function kunyomiListMaker(kunyomiList: Array<Kunyomi>) {
     return result;
 }
 
-function emit_error(text: string) {
-    browser.runtime.sendMessage({
-        command: "backgroundScriptError",
-        error: text
-    });
+async function getCurrentTab() : Promise<Array<browser.tabs.Tab>> {
+    return await browser.tabs.query({ currentWindow: true, active: true });
+}
+
+function emitError(text: string) {
+    getCurrentTab().then(tabInfo => {
+        browser.tabs.sendMessage(tabInfo[0].id!, {
+            command: "backgroundScriptError",
+            error: text
+        });
+    })
 }
