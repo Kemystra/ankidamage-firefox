@@ -134,7 +134,6 @@ function parseKunyomiData(kunyomiTableBody: JQuery<Node>): Array<Kunyomi> {
 
         // The <tr> tag
         const kunyomiElement = kunyomiTableBodyChildren.eq(i);
-        console.log(kunyomiElement)
 
         // Inside each <tr> tag, we got 2 <td> tags
         // First <td> tag have the hiragana reading and the particles
@@ -177,11 +176,12 @@ function loopThroughAllTags(rawContents: JQuery<Node>, startIndex: number): [Arr
     for (; i < rawContents.length; i++) {
         if (isElementTag(rawContents.eq(i))) {
             isFirstTagFound = true;
+            break;
         }
     }
 
     // If the index goes out of bounds, no tags are found
-    if (isFirstTagFound)
+    if (!isFirstTagFound)
         return [[], i];
 
     // Add tags until no more is found
