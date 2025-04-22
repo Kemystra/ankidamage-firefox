@@ -108,40 +108,51 @@ function scrapeKanjiInfo() {
         kanji.onyomiMnemonics = onyomiTable.eq(1).text().trim();
     }
 
-    kanji.kunyomiData = {};
-    let kunyomis: Array<string> = [];
-    let kunyomiUsages: Array<string> = [];
 
-    if (kunyomiTable) {
-        // RegEx FTW!!1!
-        // Technically, you MAY be able to use a normal for loop
-        // and avoid the use of if-else inside
-        // but damn, the code works for 3 years
-        // ain't touching that
-        kunyomiTable.each((index, element) => {
-            let kunyomiElem = $(element).text();
-            if (index % 2) {
-                kunyomiUsages.push(kunyomiElem
-                    .replace(/[★☆]/g, "")
-                    .replace(/[\n\r]+/g, "")
-                    .trim()
-                );
-            }
-            else {
-                kunyomis.push(kunyomiElem
-                    .replace(/[\n\r]+/g, "")
-                    .replace(")", ") ")
-                    .trim()
-                );
-            }
-        });
-    }
-
-    kunyomis.forEach((val, i) => {
-        kanji.kunyomiData[val] = kunyomiUsages[i];
-    });
+    kunyomiTable = $(".definition").eq(2).find("tbody").eq(0);
+    kanji.kunyomis = kunyomiTable ? parseKunyomiData(kunyomiTable) : [];
 
     return kanji;
+}
+
+function parseKunyomiData(kunyomiTableBody: JQuery<Node>): Array<Kunyomi> {
+    let result: Array<Kunyomi> = [];
+
+    // Inside the <tbody>
+    // We have multiple <tr> tags corresponding to each kunyomis
+    for (let i = 0; i < kunyomiTableBody.length; i++) {
+
+        // The <tr> tag
+        const kunyomiElement = kunyomiTableBody[i];
+
+        // Inside each <tr> tag, we got 2 <td> tags
+        // First <td> tag have the hiragana reading and the particles
+        // Second <td> tag have the rest of the information
+
+        let kunyomiReading = $(kunyomiElement)
+        .find("td").eq(0).text()
+        .replace(")", ") ")
+        .replace(/[\r\n]+/, "")
+        .trim();
+
+        let kunyomiAdditionalData = $(kunyomiElement).find("td").eq(1)
+
+        let kunyomiMeaning = kunyomiAdditionalData
+        .contents().eq(0).text()
+        .replace(/[\r\n]+/, "")
+        .trim();
+
+        // Search from first element in the content
+        let [tags, _] = loopThroughAllTags(kunyomiAdditionalData.contents(), 0)
+
+        result.push({
+            reading: kunyomiReading,
+            meaning: kunyomiMeaning,
+            tags: tags
+        })
+    }
+
+    return result;
 }
 
 // -- Tags parsing section --
