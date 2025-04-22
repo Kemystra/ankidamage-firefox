@@ -19,9 +19,18 @@ declare global {
 
     window._hasRun = true;
     browser.runtime.onMessage.addListener(message => {
-        if (message.command === "scrapeSite") {
-            let message = scrapeKanjiInfo();
-            browser.runtime.sendMessage(message);
+        switch (message.command) {
+            case "scrapeSite":
+                let respond = scrapeKanjiInfo();
+                browser.runtime.sendMessage(respond);
+                break;
+
+            case "backgroundScriptError":
+                alert(message.error);
+                break;
+
+            default:
+                console.log(`Message received: ${message.command}`)
         }
     })
 })();
