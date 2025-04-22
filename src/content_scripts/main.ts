@@ -158,7 +158,22 @@ function parseKunyomiData(kunyomiTableBody: JQuery<Node>): Array<Kunyomi> {
 // -- Tags parsing section --
 function loopThroughAllTags(rawContents: JQuery<Node>, startIndex: number): [Array<Tag>, number] {
     let i = startIndex;
-    let tags = [];
+    let tags: Array<Tag> = [];
+
+    let isFirstTagFound = false;
+
+    // Search for the first tag
+    for (; i < rawContents.length; i++) {
+        if (isElementTag(rawContents.eq(i))) {
+            isFirstTagFound = true;
+        }
+    }
+
+    // If the index goes out of bounds, no tags are found
+    if (isFirstTagFound)
+        return [[], i];
+
+    // Add tags until no more is found
     while (isElementTag(rawContents.eq(i))) {
         tags.push(
             parseTag(rawContents.eq(i) as JQuery<HTMLAnchorElement>)
