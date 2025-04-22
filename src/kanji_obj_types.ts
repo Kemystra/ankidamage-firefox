@@ -1,18 +1,33 @@
 type Kanji = {
     character: CharacterData;
     name: string;
-    radicals: Record<string, CharacterData>;
+    tags: Array<Tag>;
+    radicals: Array<Radical>;
     mnemonics: string;
     onyomi: string;
     onyomiMnemonics: string;
-    kunyomiData: KunyomiData;
+    kunyomis: Array<Kunyomi>;
 }
 
 // Not sure if this is the best way to make interface aliases
-interface KunyomiData extends Record<string, string> { }
+type Kunyomi = {
+    reading: string;
+    meaning: string;
+    tags: Array<Tag>;
+}
+
+type Radical = {
+    character: CharacterData;
+    name: string;
+    tags: Array<Tag>;
+}
 
 type CharacterData =
     { elem_type: "IMG"; src: string; } |
     { elem_type: "TEXT"; value: string; }
 
-export { Kanji, KunyomiData, CharacterData };
+type Tag = {
+    name: string;
+}
+
+export { Kanji, Kunyomi, Radical, CharacterData, Tag };

@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { Kanji, KunyomiData } from '../kanji_obj_types';
+import { Kanji, CharacterData, Tag, Kunyomi } from '../kanji_obj_types';
 
 // Adding the hasRun property to the Window object
 // using declaration merging
@@ -33,33 +33,48 @@ function scrapeKanjiInfo() {
     // A bit dirty but it's the only place where I have to do this
     let kanji: Kanji = {
         character: { elem_type: "IMG", src: "" },
-        name: "", radicals: {}, mnemonics: "",
-        kunyomiData: { "": "" }, onyomi: "", onyomiMnemonics: ""
+        name: "", tags: [], radicals: [], mnemonics: "",
+        kunyomis: [], onyomi: "", onyomiMnemonics: ""
     };
 
     // There's always only one content in the span: either text or <img>
     let kanji_span_content = $(".kanji_character").eq(0).contents().eq(0);
-
-    // From https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-    const ELEMENT_NODE = 1;
-    if (kanji_span_content.prop("nodeType") === ELEMENT_NODE) {
-        kanji.character = {
-            elem_type: "IMG",
-            src: "https://www.kanjidamage.com" + kanji_span_content.attr("src")
-        };
-    }
-    else {
-        kanji.character = { elem_type: "TEXT", value: kanji_span_content.text() };
-    }
+    kanji.character = parseRawCharacters(kanji_span_content);
 
     kanji.name = $(".translation").eq(0).text();
-    console.log($(".col-md-8").eq(1).contents());
-    //kanji.radicals = $(".col-md-8").eq(1).text()
-    //    .replace(/\s/g, " ")
-    //    .replace(kanji.character, "")
-    //    .replace(kanji.name, "")
-    //    .replace(" +", " + ")
-    //    .trim();
+
+    let kanjiTagRawContent = $(".col-md-4.text-righted").eq(0).contents().eq(5).contents();
+    kanji.tags = loopThroughAllTags(kanjiTagRawContent, 0)[0];
+
+    let characterAndRadicalsElements = $(".col-md-8").eq(1).contents();
+    // The first three elements are not part of the radicals
+    let i = 3;
+    while (i < characterAndRadicalsElements.length) {
+        let radicalCharacter = parseRawCharacters(
+            characterAndRadicalsElements.eq(i).contents().eq(0)
+        );
+        let radicalName = characterAndRadicalsElements
+            .eq(++i)
+            .text()
+            .replace(/\(|\)/g, "")
+            .trim();
+
+        let radicalTags: Array<Tag> = [];
+        let newIndex = 0;
+        if (isElementTag(characterAndRadicalsElements.eq(++i))) {
+            [radicalTags, newIndex] = loopThroughAllTags(characterAndRadicalsElements, i);
+            i = newIndex;
+        }
+
+        kanji.radicals.push({
+            character: radicalCharacter,
+            name: radicalName,
+            tags: radicalTags
+        });
+
+        // Skip the text node of the plus sign (" + ")
+        i++;
+    }
 
     let kunyomiTable, onyomiTable;
 
@@ -93,38 +108,105 @@ function scrapeKanjiInfo() {
         kanji.onyomiMnemonics = onyomiTable.eq(1).text().trim();
     }
 
-    kanji.kunyomiData = {};
-    let kunyomis: Array<string> = [];
-    let kunyomiUsages: Array<string> = [];
 
-    if (kunyomiTable) {
-        // RegEx FTW!!1!
-        // Technically, you MAY be able to use a normal for loop
-        // and avoid the use of if-else inside
-        // but damn, the code works for 3 years
-        // ain't touching that
-        kunyomiTable.each((index, element) => {
-            let kunyomiElem = $(element).text();
-            if (index % 2) {
-                kunyomiUsages.push(kunyomiElem
-                    .replace(/[★☆]/g, "")
-                    .replace(/[\n\r]+/g, "")
-                    .trim()
-                );
-            }
-            else {
-                kunyomis.push(kunyomiElem
-                    .replace(/[\n\r]+/g, "")
-                    .replace(")", ") ")
-                    .trim()
-                );
-            }
-        });
-    }
-
-    kunyomis.forEach((val, i) => {
-        kanji.kunyomiData[val] = kunyomiUsages[i];
-    });
+    kunyomiTable = $(".definition").eq(2).find("tbody").eq(0);
+    kanji.kunyomis = kunyomiTable ? parseKunyomiData(kunyomiTable) : [];
 
     return kanji;
+}
+
+function parseKunyomiData(kunyomiTableBody: JQuery<Node>): Array<Kunyomi> {
+    let result: Array<Kunyomi> = [];
+    let kunyomiTableBodyChildren = kunyomiTableBody.children();
+
+    // Inside the <tbody>
+    // We have multiple <tr> tags corresponding to each kunyomis
+    for (let i = 0; i < kunyomiTableBodyChildren.length; i++) {
+
+        // The <tr> tag
+        const kunyomiElement = kunyomiTableBodyChildren.eq(i);
+        console.log(kunyomiElement)
+
+        // Inside each <tr> tag, we got 2 <td> tags
+        // First <td> tag have the hiragana reading and the particles
+        // Second <td> tag have the rest of the information
+
+        let kunyomiReading = $(kunyomiElement)
+        .find("td").eq(0).text()
+        .replace(")", ") ")
+        .replace(/[\r\n]+/, "")
+        .trim();
+
+        let kunyomiAdditionalData = $(kunyomiElement).find("td").eq(1)
+
+        let kunyomiMeaning = kunyomiAdditionalData
+        .contents().eq(0).text()
+        .replace(/[\r\n]+/, "")
+        .trim();
+
+        // Search from first element in the content
+        let [tags, _] = loopThroughAllTags(kunyomiAdditionalData.contents(), 0)
+
+        result.push({
+            reading: kunyomiReading,
+            meaning: kunyomiMeaning,
+            tags: tags
+        })
+    }
+
+    return result;
+}
+
+// -- Tags parsing section --
+function loopThroughAllTags(rawContents: JQuery<Node>, startIndex: number): [Array<Tag>, number] {
+    let i = startIndex;
+    let tags: Array<Tag> = [];
+
+    let isFirstTagFound = false;
+
+    // Search for the first tag
+    for (; i < rawContents.length; i++) {
+        if (isElementTag(rawContents.eq(i))) {
+            isFirstTagFound = true;
+        }
+    }
+
+    // If the index goes out of bounds, no tags are found
+    if (isFirstTagFound)
+        return [[], i];
+
+    // Add tags until no more is found
+    while (isElementTag(rawContents.eq(i))) {
+        tags.push(
+            parseTag(rawContents.eq(i) as JQuery<HTMLAnchorElement>)
+        );
+        i++;
+    }
+
+    return [tags, i];
+}
+
+function isElementTag(element: JQuery<Node>): boolean {
+    return element.hasClass("label") && element.hasClass("label-info");
+}
+
+function parseTag(tagElement: JQuery<HTMLAnchorElement>): Tag {
+    return {
+        name: tagElement.text(),
+    }
+}
+// -- End of tags parsing section --
+
+// Parse the character nodes and return the appropriate Character object
+function parseRawCharacters(characterNode: JQuery<Node>): CharacterData {
+    // From https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+    if (characterNode.prop("nodeType") === Node.ELEMENT_NODE) {
+        return {
+            elem_type: "IMG",
+            src: "https://www.kanjidamage.com" + characterNode.attr("src")
+        };
+    }
+    else {
+        return { elem_type: "TEXT", value: characterNode.text() };
+    }
 }
