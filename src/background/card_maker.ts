@@ -1,4 +1,4 @@
-import { Kanji, Kunyomis, CharacterData, Radical, Tag } from "../kanji_obj_types";
+import { Kanji, Kunyomi, CharacterData, Radical, Tag } from "../kanji_obj_types";
 import { AnkiConnectCaller } from "./anki_connect";
 
 const WRONG_CHARACTER_DATA = "INVALID_DATA";
@@ -27,7 +27,7 @@ async function sendToAnki(data: Kanji) {
                 mnemonics: data.mnemonics,
                 onyomi: data.onyomi,
                 onyomi_mnemonics: data.onyomiMnemonics,
-                kunyomis: kunyomiListMaker(data.kunyomiData),
+                kunyomis: kunyomiListMaker(data.kunyomis),
             },
             tags: [],
         }
@@ -91,14 +91,13 @@ async function uploadPicture(imageData: CharacterData) : Promise<string> {
     }
 }
 
-function kunyomiListMaker(obj: Kunyomis) {
+function kunyomiListMaker(kunyomiList: Array<Kunyomi>) {
     let result = `<ul id="kunyomi-list">`
-    let entryArray = Object.entries(obj);
-    for (const [key, val] of entryArray) {
+    for (const kunyomi of kunyomiList) {
         result += `
             <li class="kunyomi-item">
-                <p>${key}</p>
-                <p>${val}</p>
+                <p>${kunyomi.reading}</p>
+                <p>${kunyomi.meaning} ${interpretTags(kunyomi.tags)}</p>
             </li>
         `;
     }

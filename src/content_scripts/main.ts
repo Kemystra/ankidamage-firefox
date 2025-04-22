@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { Kanji, CharacterData, Tag } from '../kanji_obj_types';
+import { Kanji, CharacterData, Tag, Kunyomi } from '../kanji_obj_types';
 
 // Adding the hasRun property to the Window object
 // using declaration merging
@@ -34,7 +34,7 @@ function scrapeKanjiInfo() {
     let kanji: Kanji = {
         character: { elem_type: "IMG", src: "" },
         name: "", tags: [], radicals: [], mnemonics: "",
-        kunyomiData: { "": "" }, onyomi: "", onyomiMnemonics: ""
+        kunyomis: [], onyomi: "", onyomiMnemonics: ""
     };
 
     // There's always only one content in the span: either text or <img>
