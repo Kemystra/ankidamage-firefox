@@ -117,13 +117,15 @@ function scrapeKanjiInfo() {
 
 function parseKunyomiData(kunyomiTableBody: JQuery<Node>): Array<Kunyomi> {
     let result: Array<Kunyomi> = [];
+    let kunyomiTableBodyChildren = kunyomiTableBody.children();
 
     // Inside the <tbody>
     // We have multiple <tr> tags corresponding to each kunyomis
-    for (let i = 0; i < kunyomiTableBody.length; i++) {
+    for (let i = 0; i < kunyomiTableBodyChildren.length; i++) {
 
         // The <tr> tag
-        const kunyomiElement = kunyomiTableBody[i];
+        const kunyomiElement = kunyomiTableBodyChildren.eq(i);
+        console.log(kunyomiElement)
 
         // Inside each <tr> tag, we got 2 <td> tags
         // First <td> tag have the hiragana reading and the particles
