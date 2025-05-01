@@ -7,11 +7,19 @@ type Kanji = {
     onyomi: string;
     onyomiMnemonics: string;
     kunyomis: Array<Kunyomi>;
+    jukugos: Array<Jukugo>;
 }
 
 // Not sure if this is the best way to make interface aliases
 type Kunyomi = {
     reading: string;
+    meaning: string;
+    tags: Array<Tag>;
+}
+
+type Jukugo = {
+    word: string;
+    furigana: string;
     meaning: string;
     tags: Array<Tag>;
 }
@@ -30,4 +38,4 @@ type Tag = {
     name: string;
 }
 
-export { Kanji, Kunyomi, Radical, CharacterData, Tag };
+export { Kanji, Kunyomi, Radical, CharacterData, Tag, Jukugo };

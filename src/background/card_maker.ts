@@ -1,4 +1,4 @@
-import { Kanji, Kunyomi, CharacterData, Radical, Tag } from "../kanji_obj_types";
+import { Kanji, Kunyomi, CharacterData, Radical, Tag, Jukugo } from "../kanji_obj_types";
 import { AnkiConnectCaller } from "./anki_connect";
 
 const WRONG_CHARACTER_DATA = "INVALID_DATA";
@@ -28,6 +28,7 @@ async function sendToAnki(data: Kanji) {
                 onyomi: data.onyomi,
                 onyomi_mnemonics: data.onyomiMnemonics,
                 kunyomis: kunyomiListMaker(data.kunyomis),
+                notes: jukugoListMaker(data.jukugos)
             },
             tags: [],
         }
@@ -104,6 +105,10 @@ function kunyomiListMaker(kunyomiList: Array<Kunyomi>) {
     result += "</ul>";
 
     return result;
+}
+
+function jukugoListMaker(jukugoList: Array<Jukugo>) {
+
 }
 
 async function getCurrentTab() : Promise<Array<browser.tabs.Tab>> {

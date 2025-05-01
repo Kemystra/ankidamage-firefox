@@ -43,7 +43,7 @@ function scrapeKanjiInfo() {
     let kanji: Kanji = {
         character: { elem_type: "IMG", src: "" },
         name: "", tags: [], radicals: [], mnemonics: "",
-        kunyomis: [], onyomi: "", onyomiMnemonics: ""
+        kunyomis: [], onyomi: "", onyomiMnemonics: "", jukugos: []
     };
 
     // There's always only one content in the span: either text or <img>
@@ -120,6 +120,8 @@ function scrapeKanjiInfo() {
 
     kunyomiTable = $(".definition").eq(2).find("tbody").eq(0);
     kanji.kunyomis = kunyomiTable ? parseKunyomiData(kunyomiTable) : [];
+
+    let jukugoTable = $(".definition").eq(3).find("tbody").eq(0);
 
     return kanji;
 }
