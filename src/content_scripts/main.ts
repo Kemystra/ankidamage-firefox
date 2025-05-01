@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { Kanji, CharacterData, Tag, Kunyomi } from '../kanji_obj_types';
+import { Kanji, CharacterData, Tag, Kunyomi, Jukugo } from '../kanji_obj_types';
 
 // Adding the hasRun property to the Window object
 // using declaration merging
@@ -43,7 +43,7 @@ function scrapeKanjiInfo() {
     let kanji: Kanji = {
         character: { elem_type: "IMG", src: "" },
         name: "", tags: [], radicals: [], mnemonics: "",
-        kunyomis: [], onyomi: "", onyomiMnemonics: ""
+        kunyomis: [], onyomi: "", onyomiMnemonics: "", jukugos: []
     };
 
     // There's always only one content in the span: either text or <img>
@@ -121,6 +121,9 @@ function scrapeKanjiInfo() {
     kunyomiTable = $(".definition").eq(2).find("tbody").eq(0);
     kanji.kunyomis = kunyomiTable ? parseKunyomiData(kunyomiTable) : [];
 
+    let jukugoTable = $(".definition").eq(3).find("tbody").eq(0);
+    kanji.jukugos = jukugoTable ? parseJukugoData(jukugoTable) : [];
+
     return kanji;
 }
 
@@ -160,6 +163,46 @@ function parseKunyomiData(kunyomiTableBody: JQuery<Node>): Array<Kunyomi> {
             meaning: kunyomiMeaning,
             tags: tags
         })
+    }
+
+    return result;
+}
+
+function parseJukugoData(jukugoTable: JQuery<Node>): Array<Jukugo> {
+    let result: Array<Jukugo> = [];
+    let jukugoTableBodyChildren = jukugoTable.children();
+
+    // Just like in kunyomiTable, we have one <tr> tag for each jukugo
+    for (let i = 0; i < jukugoTableBodyChildren.length; i++) {
+
+        // The <tr> tag
+        const jukugoElement = jukugoTableBodyChildren.eq(i);
+
+        // Inside each <tr> tags, we have 2 <td> tags.
+        // One for the word and its furigana
+        // The other for the meaning and tags
+
+        // The word and its furigana is quite deeply nested inside the first <td> tag
+        // We just extract the whole text and use regex to separate them
+        let jukugoWordAndFuriganaText = jukugoElement.find(".kanji_character > ruby").text();
+        let jukugoWordAndFuriganaRegexResult = /(.*)(\(.*\))/.exec(jukugoWordAndFuriganaText);
+
+        // The first result returns the whole text back, due to greedy regex matching
+        let [, jukugoWord, jukugoFurigana] = jukugoWordAndFuriganaRegexResult!;
+
+        let jukugoAdditionalData = jukugoElement.find("td > p").eq(0);
+        let jukugoMeaning = jukugoAdditionalData
+            .contents().eq(0).text()
+            .replace(/[\r\n]+/, "")
+            .trim();
+        let [jukugoTags, ] = loopThroughAllTags(jukugoAdditionalData.contents(), 0);
+
+        result.push({
+            word: jukugoWord,
+            furigana: jukugoFurigana,
+            meaning: jukugoMeaning,
+            tags: jukugoTags
+        });
     }
 
     return result;
