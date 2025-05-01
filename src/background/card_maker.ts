@@ -108,7 +108,12 @@ function kunyomiListMaker(kunyomiList: Array<Kunyomi>) {
 }
 
 function jukugoListMaker(jukugoList: Array<Jukugo>) {
+    let result = "";
+    for (const jukugo of jukugoList) {
+        result += `<p>${jukugo.word} ${jukugo.furigana}: ${jukugo.meaning} ${interpretTags(jukugo.tags)}</p>`
+    }
 
+    return result;
 }
 
 async function getCurrentTab() : Promise<Array<browser.tabs.Tab>> {
